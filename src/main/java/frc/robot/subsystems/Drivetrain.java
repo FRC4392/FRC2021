@@ -33,12 +33,19 @@ public class Drivetrain extends SubsystemBase {
   private final PigeonIMU pidgey = new PigeonIMU(10);
 
   private final SwerveModuleMk1 Module1 = new SwerveModuleMk1(mAzimuth1, mDriveMotor1, mCanCoder1);
+  private final SwerveModuleMk1 Module2 = new SwerveModuleMk1(mAzimuth2, mDriveMotor2, mCanCoder2);
+  private final SwerveModuleMk1 Module3 = new SwerveModuleMk1(mAzimuth3, mDriveMotor3, mCanCoder3);
+  private final SwerveModuleMk1 Module4 = new SwerveModuleMk1(mAzimuth4, mDriveMotor4, mCanCoder4);
+
 
   private final SwerveDrive mSwerve;
 
   /** Creates a new Drivetrain. */
   public Drivetrain() {
     mSwerve = new SwerveDrive(Module1);
+    mSwerve = new SwerveDrive(Module2);
+    mSwerve = new SwerveDrive(Module3);
+    mSwerve = new SwerveDrive(Module4);
   }
 
   @Override
