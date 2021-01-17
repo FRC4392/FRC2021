@@ -11,10 +11,12 @@ public class SwerveModuleMk1 implements SwerveModule {
     private final double mPositionX;
     private final double mPositonY;
 
-    public SwerveModuleMk1(CANSparkMax azimuthMotor, CANSparkMax driveMotor, CANCoder azimuthEncoder){
+    public SwerveModuleMk1(CANSparkMax azimuthMotor, CANSparkMax driveMotor, CANCoder azimuthEncoder, double X, double Y){
         mAzimuthCanCoder = azimuthEncoder;
         mDriveMotor = driveMotor;
         mAzimuthMotor = azimuthMotor;
+        mPositionX = X;
+        mPositonY = Y;
     }
 
 
