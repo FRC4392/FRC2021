@@ -1,6 +1,7 @@
 package frc.robot.swerve;
 
 import com.ctre.phoenix.sensors.CANCoder;
+import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 
 public class SwerveModuleMk1 implements SwerveModule {
@@ -10,6 +11,8 @@ public class SwerveModuleMk1 implements SwerveModule {
     private final CANCoder mAzimuthCanCoder;
     private final double mPositionX;
     private final double mPositionY;
+    private final CANEncoder mAzimutCanEncoder;
+    private final CANEncoder mDrivCanEncoder;
 
     public SwerveModuleMk1(CANSparkMax azimuthMotor, CANSparkMax driveMotor, CANCoder azimuthEncoder, double X, double Y){
         mAzimuthCanCoder = azimuthEncoder;
