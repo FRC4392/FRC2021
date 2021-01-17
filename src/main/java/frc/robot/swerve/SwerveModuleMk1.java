@@ -9,14 +9,14 @@ public class SwerveModuleMk1 implements SwerveModule {
     private final CANSparkMax mDriveMotor;
     private final CANCoder mAzimuthCanCoder;
     private final double mPositionX;
-    private final double mPositonY;
+    private final double mPositionY;
 
     public SwerveModuleMk1(CANSparkMax azimuthMotor, CANSparkMax driveMotor, CANCoder azimuthEncoder, double X, double Y){
         mAzimuthCanCoder = azimuthEncoder;
         mDriveMotor = driveMotor;
         mAzimuthMotor = azimuthMotor;
         mPositionX = X;
-        mPositonY = Y;
+        mPositionY = Y;
     }
 
 
@@ -33,15 +33,25 @@ public class SwerveModuleMk1 implements SwerveModule {
     }
 
     @Override
-    public void getSpeed() {
+    public double getSpeed() {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void getRotation() {
+    public double getRotation() {
         mAzimuthCanCoder.getAbsolutePosition();
 
+    }
+
+    @Override
+    public double getPositionX() {
+        return mPositionX;
+    }
+
+    @Override
+    public double getPositionY() {
+        return mPositionY
     }
     
 }
