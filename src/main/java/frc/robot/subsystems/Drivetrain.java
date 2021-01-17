@@ -42,10 +42,7 @@ public class Drivetrain extends SubsystemBase {
 
   /** Creates a new Drivetrain. */
   public Drivetrain() {
-    mSwerve = new SwerveDrive(Module1);
-    mSwerve = new SwerveDrive(Module2);
-    mSwerve = new SwerveDrive(Module3);
-    mSwerve = new SwerveDrive(Module4);
+    mSwerve = new SwerveDrive(Module1, Module2, Module3, Module4);
   }
 
   @Override

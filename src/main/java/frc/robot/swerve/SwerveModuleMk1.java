@@ -8,6 +8,8 @@ public class SwerveModuleMk1 implements SwerveModule {
     private final CANSparkMax mAzimuthMotor;
     private final CANSparkMax mDriveMotor;
     private final CANCoder mAzimuthCanCoder;
+    private final double mPositionX;
+    private final double mPositonY;
 
     public SwerveModuleMk1(CANSparkMax azimuthMotor, CANSparkMax driveMotor, CANCoder azimuthEncoder){
         mAzimuthCanCoder = azimuthEncoder;
