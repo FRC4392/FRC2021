@@ -12,8 +12,8 @@ public class SwerveModuleMk1 implements SwerveModule {
     private final CANCoder mAzimuthCanCoder;
     private final double mPositionX;
     private final double mPositionY;
-    private final CANEncoder mAzimutCanEncoder;
-    private final CANEncoder mDrivCanEncoder;
+    private final CANEncoder mAzimuthEncoder;
+    private final CANEncoder mDrivEncoder;
     private final CANPIDController mDrivePID;
     private final CANPIDController mAzimuthPID;
 
@@ -23,6 +23,10 @@ public class SwerveModuleMk1 implements SwerveModule {
         mAzimuthMotor = azimuthMotor;
         mPositionX = X;
         mPositionY = Y;
+        mAzimuthEncoder = mAzimuthMotor.getEncoder();
+        mDrivEncoder = mDriveMotor.getEncoder();
+        mDrivePID = mDriveMotor.getPIDController();
+        mAzimuthPID = mAzimuthMotor.getPIDController();
     }
 
 
