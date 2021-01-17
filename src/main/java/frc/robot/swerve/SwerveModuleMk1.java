@@ -21,13 +21,13 @@ public class SwerveModuleMk1 implements SwerveModule {
 
 
     @Override
-    public void setSpeed() {
+    public void setSpeed(double speed) {
         mAzimuthMotor.set(0);
 
     }
 
     @Override
-    public void setRotation() {
+    public void setRotation(double rotation) {
         mDriveMotor.set(0);
 
     }
