@@ -51,7 +51,7 @@ public class SwerveModuleMk1 implements SwerveModule {
 
     @Override
     public double getPositionY() {
-        return mPositionY
+        return mPositionY;
     }
     
 }
