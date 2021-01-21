@@ -14,5 +14,4 @@ public interface SwerveModule {
     void log();
     void set(Translation2d drive);
     Translation2d getLocation();
-    }
 }
