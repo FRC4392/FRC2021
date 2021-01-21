@@ -10,7 +10,7 @@ public interface SwerveModule {
     double getRotation();
     void set(Vector2d drive);
     Vector2d getState();
-    void innit();
+    void init();
     void log();
     void set(Translation2d drive);
     Translation2d getLocation();
