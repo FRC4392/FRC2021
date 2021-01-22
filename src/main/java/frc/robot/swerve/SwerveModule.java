@@ -9,10 +9,10 @@ public interface SwerveModule {
     //Used to log any data from the serve module
     void log();
     //Used to set the velocity and position of the swerve module
-    void set(Vector2d drive);
+    void set(SwerveState drive);
     //Used to get the velocity and position of the swerve module
-    Vector2d getState();
+    SwerveState getState();
     //Used to get the location of the swerve module relative to the 
     //center of the robot
-    Translation2d getLocation();
+    Translation2d getModuleLocation();
 }

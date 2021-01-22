@@ -5,7 +5,6 @@ import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 
-import edu.wpi.first.wpilibj.drive.Vector2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 
 public class SwerveModuleMk1 implements SwerveModule {
@@ -53,12 +52,12 @@ public class SwerveModuleMk1 implements SwerveModule {
     }
 
     @Override
-    public Translation2d getLocation() {
+    public Translation2d getModuleLocation() {
         return mLocation;
     }
 
     @Override
-    public Vector2d getState() {
+    public SwerveState getState() {
         return null;
     }
 
@@ -75,7 +74,7 @@ public class SwerveModuleMk1 implements SwerveModule {
     }
 
     @Override
-    public void set(Vector2d drive) {
+    public void set(SwerveState drive) {
         // TODO Auto-generated method stub
 
     }
