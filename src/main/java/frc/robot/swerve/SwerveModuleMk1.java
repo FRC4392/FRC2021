@@ -13,7 +13,7 @@ public class SwerveModuleMk1 implements SwerveModule {
     private final CANSparkMax mDriveMotor;
     private final CANCoder mAzimuthCanCoder;
     private final CANEncoder mAzimuthEncoder;
-    private final CANEncoder mDrivEncoder;
+    private final CANEncoder mDriveEncoder;
     private final CANPIDController mDrivePID;
     private final CANPIDController mAzimuthPID;
     private final Translation2d mLocation;
@@ -26,7 +26,7 @@ public class SwerveModuleMk1 implements SwerveModule {
         mLocation = location;
 
         mAzimuthEncoder = mAzimuthMotor.getEncoder();
-        mDrivEncoder = mDriveMotor.getEncoder();
+        mDriveEncoder = mDriveMotor.getEncoder();
         mDrivePID = mDriveMotor.getPIDController();
         mAzimuthPID = mAzimuthMotor.getPIDController();
     }
@@ -43,7 +43,7 @@ public class SwerveModuleMk1 implements SwerveModule {
 
     // Gets the speed of the drive motor
     public double getSpeed() {
-        return mDrivEncoder.getVelocity();
+        return mDriveEncoder.getVelocity();
     }
 
     // Gets the rotation position of the azimuth module
@@ -58,7 +58,7 @@ public class SwerveModuleMk1 implements SwerveModule {
 
     @Override
     public SwerveState getState() {
-        return null;
+        return new SwerveState.fromDegrees(mAzimuthCanCoder.getAbsolutePosition(), mDriveEncoder.getVelocity());
     }
 
     @Override
