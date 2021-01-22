@@ -54,13 +54,11 @@ public class SwerveModuleMk1 implements SwerveModule {
 
     @Override
     public Translation2d getLocation() {
-        // TODO Auto-generated method stub
-        return null;
+        return mLocation;
     }
 
     @Override
     public Vector2d getState() {
-        // TODO Auto-generated method stub
         return null;
     }
 
