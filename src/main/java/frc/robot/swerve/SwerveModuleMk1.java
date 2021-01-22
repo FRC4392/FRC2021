@@ -58,7 +58,7 @@ public class SwerveModuleMk1 implements SwerveModule {
 
     @Override
     public SwerveState getState() {
-        return new SwerveState.fromDegrees(mAzimuthCanCoder.getAbsolutePosition(), mDriveEncoder.getVelocity());
+        return SwerveState.fromDegrees(mAzimuthCanCoder.getAbsolutePosition(), mDriveEncoder.getVelocity());
     }
 
     @Override
@@ -75,7 +75,8 @@ public class SwerveModuleMk1 implements SwerveModule {
 
     @Override
     public void set(SwerveState drive) {
-        // TODO Auto-generated method stub
+        double Angle = drive.getDegrees();
+        double Velocity = drive.getVelocity();
 
     }
 
