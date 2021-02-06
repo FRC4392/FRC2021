@@ -4,8 +4,22 @@
 
 package frc.robot;
 
+import java.util.function.BooleanSupplier;
+
+import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Commands.*;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.Shooter;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -16,6 +30,14 @@ import frc.robot.subsystems.Drivetrain;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private static final Drivetrain mDrivetrain = new Drivetrain();
+  Limelight mLimelight = new Limelight();
+  Intake mIntake = new Intake();
+  Indexer mIndexer = new Indexer();
+  Shooter mShooter = new Shooter();
+
+  XboxController mDriverController = new XboxController(0);
+  XboxController mOperatorController = new XboxController(1);
+  
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -29,7 +51,26 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
-  private void configureButtonBindings() {}
+  private void configureButtonBindings() {
+    JoystickButton ManualShootButton = new JoystickButton(mOperatorController,XboxController.Button.kX.value);
+    JoystickButton ManualShootButton2 = new JoystickButton(mOperatorController, XboxController.Button.kA.value);
+    JoystickButton ManualShootButton3 = new JoystickButton(mOperatorController, XboxController.Button.kB.value);
+    JoystickButton OuttakeButton = new JoystickButton(mOperatorController, XboxController.Button.kBumperLeft.value);
+    JoystickButton IntakePositionButton = new JoystickButton(mOperatorController, XboxController.Button.kBumperRight.value);
+    Trigger IntakeButton = new Trigger( () -> mOperatorController.getTriggerAxis(GenericHID.Hand.kLeft) > 0.01 );
+    Trigger ShootButton = new Trigger( () -> mOperatorController.getTriggerAxis(GenericHID.Hand.kRight) > 0.01 );
+
+    mDrivetrain.setDefaultCommand(new DriveCommand(mDrivetrain, mDriverController));
+    ManualShootButton.whileHeld(new ManualShootCommand(mShooter));
+    ManualShootButton2.whileHeld(new ManualShootCommand2(mShooter));
+    ManualShootButton3.whileHeld( new ManualShootCommand3(mShooter));
+    IntakeButton.whileActiveContinuous(new IntakeCommand(mIntake, mIndexer));
+    OuttakeButton.whileHeld(new OuttakeCommand(mIntake, mIndexer));
+    IntakePositionButton.whenPressed(mIntake::lift);
+    IntakePositionButton.whenReleased(mIntake::lower);
+    mIndexer.setDefaultCommand(new IndexerIndexCommand(mIndexer));
+    ShootButton.whileActiveContinuous(new IndexShoot(mIndexer, mShooter));
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
