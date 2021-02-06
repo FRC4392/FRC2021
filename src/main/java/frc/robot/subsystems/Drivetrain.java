@@ -32,10 +32,15 @@ public class Drivetrain extends SubsystemBase {
 
   private final PigeonIMU pidgey = new PigeonIMU(10);
 
+  private final double mTrackWidth = 30.0;
+  private final double mWheelBase = 30.0;
+
   private final SwerveModuleMk1 Module1 = new SwerveModuleMk1(mAzimuth1, mDriveMotor1, mCanCoder1);
   private final SwerveModuleMk1 Module2 = new SwerveModuleMk1(mAzimuth2, mDriveMotor2, mCanCoder2);
   private final SwerveModuleMk1 Module3 = new SwerveModuleMk1(mAzimuth3, mDriveMotor3, mCanCoder3);
   private final SwerveModuleMk1 Module4 = new SwerveModuleMk1(mAzimuth4, mDriveMotor4, mCanCoder4);
+
+  SwerveDrive swerveDrive = new SwerveDrive(pidgey, mTrackWidth, mWheelBase, new SwervePod[]{Module1, Module2, Module3, Module4}, true);
 
 
   private final SwerveDrive mSwerve;
@@ -43,6 +48,15 @@ public class Drivetrain extends SubsystemBase {
   /** Creates a new Drivetrain. */
   public Drivetrain() {
     mSwerve = new SwerveDrive(Module1, Module2, Module3, Module4);
+    
+  }
+
+  public void drive(double forward, double strafe, double azimuth){
+    swerveDrive.drive(forward, strafe, azimuth);
+  }
+
+  public void stop(){
+    swerveDrive.stop();
   }
 
   @Override
