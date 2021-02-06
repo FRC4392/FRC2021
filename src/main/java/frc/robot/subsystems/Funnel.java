@@ -11,8 +11,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class Funnel extends CommandBase {
   /** Creates a new Funnel. */
+
+  CANSparkMax mFunnelMotor;
+
   public Funnel() {
-    private final CANSparkMax mFunnelMotor = new CANSparkMax(41, MotorType.kBrushless);
+   mFunnelMotor = new CANSparkMax(41, MotorType.kBrushless);
 
   }
 
