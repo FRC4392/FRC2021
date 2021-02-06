@@ -12,13 +12,14 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class Funnel extends CommandBase {
   /** Creates a new Funnel. */
   public Funnel() {
-    // Use addRequirements() here to declare subsystem dependencies.
     private final CANSparkMax mFunnelMotor = new CANSparkMax(41, MotorType.kBrushless);
 
-    public void setSpeed(double speed) {
-
-    }
   }
+
+  public void setSpeed(double speed){
+    mFunnelMotor.set(speed);
+  }
+
 
   // Called when the command is initially scheduled.
   @Override
