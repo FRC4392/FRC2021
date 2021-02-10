@@ -4,6 +4,7 @@ import com.ctre.phoenix.sensors.CANCoder;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.ControlType;
 
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 
@@ -17,6 +18,7 @@ public class SwerveModuleMk1 implements SwerveModule {
     private final CANPIDController mDrivePID;
     private final CANPIDController mAzimuthPID;
     private final Translation2d mLocation;
+    private boolean isInverted;
 
     public SwerveModuleMk1(CANSparkMax azimuthMotor, CANSparkMax driveMotor, CANCoder azimuthEncoder,
             Translation2d location) {
@@ -78,8 +80,23 @@ public class SwerveModuleMk1 implements SwerveModule {
         double Angle = drive.getDegrees();
         double Velocity = drive.getVelocity();
 
+        double azimuthPosition = mAzimuthEncoder.getPosition();
+        double azimuthError = Math.IEEEremainder(Angle - azimuthPosition, 360);
+
+        isInverted = Math.abs(azimuthError) > 90;
+        if (isInverted) {
+            azimuthError -= Math.copySign(180, azimuthError);
+            Velocity = -Velocity;
+        }
+        double setpoint = azimuthError + azimuthPosition;
+        mAzimuthPID.setReference(setpoint, ControlType.kPosition);
+        mDriveMotor.set(Velocity);
     }
 
+    public void stop(){
+        mAzimuthMotor.set(0);
+        mDriveMotor.set(0);
 
+    }
     
 }
