@@ -10,6 +10,7 @@ public interface SwerveModule {
     void log();
     //Used to set the velocity and position of the swerve module
     void set(SwerveState drive);
+    void stop();
     //Used to get the velocity and position of the swerve module
     SwerveState getState();
     //Used to get the location of the swerve module relative to the 

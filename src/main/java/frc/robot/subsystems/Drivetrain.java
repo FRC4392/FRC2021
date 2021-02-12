@@ -9,6 +9,7 @@ import com.ctre.phoenix.sensors.PigeonIMU;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.swerve.SwerveDrive;
 import frc.robot.swerve.SwerveModuleMk1;
@@ -35,12 +36,12 @@ public class Drivetrain extends SubsystemBase {
   private final double mTrackWidth = 30.0;
   private final double mWheelBase = 30.0;
 
-  private final SwerveModuleMk1 Module1 = new SwerveModuleMk1(mAzimuth1, mDriveMotor1, mCanCoder1);
-  private final SwerveModuleMk1 Module2 = new SwerveModuleMk1(mAzimuth2, mDriveMotor2, mCanCoder2);
-  private final SwerveModuleMk1 Module3 = new SwerveModuleMk1(mAzimuth3, mDriveMotor3, mCanCoder3);
-  private final SwerveModuleMk1 Module4 = new SwerveModuleMk1(mAzimuth4, mDriveMotor4, mCanCoder4);
+  private final SwerveModuleMk1 Module1 = new SwerveModuleMk1(mAzimuth1, mDriveMotor1, mCanCoder1, new Translation2d(), "");
+  private final SwerveModuleMk1 Module2 = new SwerveModuleMk1(mAzimuth2, mDriveMotor2, mCanCoder2, new Translation2d(), "");
+  private final SwerveModuleMk1 Module3 = new SwerveModuleMk1(mAzimuth3, mDriveMotor3, mCanCoder3, new Translation2d(), "");
+  private final SwerveModuleMk1 Module4 = new SwerveModuleMk1(mAzimuth4, mDriveMotor4, mCanCoder4, new Translation2d(), "");
 
-  SwerveDrive swerveDrive = new SwerveDrive(pidgey, mTrackWidth, mWheelBase, new SwervePod[]{Module1, Module2, Module3, Module4}, true);
+  SwerveDrive swerveDrive = new SwerveDrive(Module1, Module2, Module3, Module4);
 
 
   private final SwerveDrive mSwerve;
@@ -48,7 +49,7 @@ public class Drivetrain extends SubsystemBase {
   /** Creates a new Drivetrain. */
   public Drivetrain() {
     mSwerve = new SwerveDrive(Module1, Module2, Module3, Module4);
-    
+
   }
 
   public void drive(double forward, double strafe, double azimuth){

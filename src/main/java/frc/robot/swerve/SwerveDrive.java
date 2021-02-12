@@ -10,4 +10,16 @@ public class SwerveDrive {
         numModules = modules.length;
         mModules = Arrays.copyOf(modules, numModules);
     }
+
+	public void stop() {
+        for (SwerveModule swerveModule : mModules) {
+            swerveModule.stop();
+        }
+	}
+
+    public void drive(double forward, double strafe, double azimuth){
+        
+    }
+
+
 }

@@ -2,11 +2,13 @@ package frc.robot.swerve;
 
 import com.ctre.phoenix.sensors.CANCoder;
 import com.revrobotics.CANEncoder;
+import com.revrobotics.CANError;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 
 import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SwerveModuleMk1 implements SwerveModule {
 
@@ -18,14 +20,16 @@ public class SwerveModuleMk1 implements SwerveModule {
     private final CANPIDController mDrivePID;
     private final CANPIDController mAzimuthPID;
     private final Translation2d mLocation;
+    private final String mName; 
     private boolean isInverted;
 
     public SwerveModuleMk1(CANSparkMax azimuthMotor, CANSparkMax driveMotor, CANCoder azimuthEncoder,
-            Translation2d location) {
+            Translation2d location, String name) {
         mAzimuthCanCoder = azimuthEncoder;
         mDriveMotor = driveMotor;
         mAzimuthMotor = azimuthMotor;
         mLocation = location;
+        mName = name;
 
         mAzimuthEncoder = mAzimuthMotor.getEncoder();
         mDriveEncoder = mDriveMotor.getEncoder();
@@ -60,19 +64,26 @@ public class SwerveModuleMk1 implements SwerveModule {
 
     @Override
     public SwerveState getState() {
-        return SwerveState.fromDegrees(mAzimuthCanCoder.getAbsolutePosition(), mDriveEncoder.getVelocity());
+        return SwerveState.fromDegrees(mAzimuthEncoder.getPosition(), mDriveEncoder.getVelocity());
     }
 
     @Override
     public void init() {
-        // TODO Auto-generated method stub
+        mAzimuthMotor.getEncoder().setPositionConversionFactor(25.08);
+        mAzimuthMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        mAzimuthMotor.setSmartCurrentLimit(10);
 
+        mDriveMotor.setInverted(true);
+        mDriveEncoder.setVelocityConversionFactor(4.712);
+
+        setAzimuthZero();
     }
 
     @Override
     public void log() {
-        // TODO Auto-generated method stub
-
+        SmartDashboard.putNumber(mName + " Absolute Position", mAzimuthCanCoder.getAbsolutePosition());
+        SmartDashboard.putNumber(mName + " Incrimental Position", mAzimuthEncoder.getPosition());
+        SmartDashboard.putNumber(mName + " Velocity", mDriveEncoder.getVelocity());
     }
 
     @Override
@@ -93,10 +104,16 @@ public class SwerveModuleMk1 implements SwerveModule {
         mDriveMotor.set(Velocity);
     }
 
+    @Override
     public void stop(){
         mAzimuthMotor.set(0);
         mDriveMotor.set(0);
-
+    }
+    
+    public void setAzimuthZero() {
+        //calculate position to increments
+        double position = mAzimuthCanCoder.getAbsolutePosition();
+        CANError err = mAzimuthEncoder.setPosition(position);
     }
     
 }
