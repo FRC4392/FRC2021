@@ -17,6 +17,7 @@ public class SwerveModuleMk1 implements SwerveModule {
     private final CANCoder mAzimuthCanCoder;
     private final CANEncoder mAzimuthEncoder;
     private final CANEncoder mDriveEncoder;
+    @SuppressWarnings("unused")
     private final CANPIDController mDrivePID;
     private final CANPIDController mAzimuthPID;
     private final Translation2d mLocation;
@@ -113,6 +114,7 @@ public class SwerveModuleMk1 implements SwerveModule {
     public void setAzimuthZero() {
         //calculate position to increments
         double position = mAzimuthCanCoder.getAbsolutePosition();
+        @SuppressWarnings("unused")
         CANError err = mAzimuthEncoder.setPosition(position);
     }
     

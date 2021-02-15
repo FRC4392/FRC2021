@@ -4,16 +4,29 @@ import edu.wpi.first.wpilibj.drive.Vector2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 
 public interface SwerveModule {
-    //Used to run any initialization needed on the swerve module
+    /**
+     * Run any initialization needed on the swerve module
+     */
     void init();
-    //Used to log any data from the serve module
+    /**
+     * Log necassary data to driverstation and file
+     */
     void log();
-    //Used to set the velocity and position of the swerve module
+    /**
+     * Set the state the swerve drive should attempt to be in
+     */
     void set(SwerveState drive);
+    /**
+     * Stop all motion on the swerve drive.
+     */
     void stop();
-    //Used to get the velocity and position of the swerve module
+    /**
+     * Return the current state of the swerve module
+     */
     SwerveState getState();
-    //Used to get the location of the swerve module relative to the 
-    //center of the robot
+    /**
+     * Get the location of the swerve module relative to the 
+     * center of the robot
+     */
     Translation2d getModuleLocation();
 }
