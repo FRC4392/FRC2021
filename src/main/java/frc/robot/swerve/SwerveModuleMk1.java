@@ -83,7 +83,7 @@ public class SwerveModuleMk1 implements SwerveModule {
     @Override
     public void log() {
         SmartDashboard.putNumber(mName + " Absolute Position", mAzimuthCanCoder.getAbsolutePosition());
-        SmartDashboard.putNumber(mName + " Incrimental Position", mAzimuthEncoder.getPosition());
+        SmartDashboard.putNumber(mName + " Incremental Position", mAzimuthEncoder.getPosition());
         SmartDashboard.putNumber(mName + " Velocity", mDriveEncoder.getVelocity());
     }
 
