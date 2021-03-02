@@ -7,7 +7,9 @@ import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SwerveModuleMk1 implements SwerveModule {
@@ -23,6 +25,8 @@ public class SwerveModuleMk1 implements SwerveModule {
     private final Translation2d mLocation;
     private final String mName; 
     private boolean isInverted;
+
+    //need to update the speed to m/s
 
     public SwerveModuleMk1(CANSparkMax azimuthMotor, CANSparkMax driveMotor, CANCoder azimuthEncoder,
             Translation2d location, String name) {
@@ -63,9 +67,9 @@ public class SwerveModuleMk1 implements SwerveModule {
         return mLocation;
     }
 
-    @Override
-    public SwerveState getState() {
-        return SwerveState.fromDegrees(mAzimuthEncoder.getPosition(), mDriveEncoder.getVelocity());
+    //@Override
+    public SwerveModuleState getState() {
+        return new SwerveModuleState(getSpeed(), Rotation2d.fromDegrees(getRotation()));
     }
 
     @Override
@@ -88,9 +92,9 @@ public class SwerveModuleMk1 implements SwerveModule {
     }
 
     @Override
-    public void set(SwerveState drive) {
-        double Angle = drive.getDegrees();
-        double Velocity = drive.getVelocity();
+    public void set(SwerveModuleState drive) {
+        double Angle = drive.angle.getDegrees();
+        double Velocity = drive.speedMetersPerSecond;
 
         double azimuthPosition = mAzimuthEncoder.getPosition();
         double azimuthError = Math.IEEEremainder(Angle - azimuthPosition, 360);

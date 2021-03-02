@@ -2,6 +2,7 @@ package frc.robot.swerve;
 
 import edu.wpi.first.wpilibj.drive.Vector2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 
 public interface SwerveModule {
     /**
@@ -15,7 +16,7 @@ public interface SwerveModule {
     /**
      * Set the state the swerve drive should attempt to be in
      */
-    void set(SwerveState drive);
+    void set(SwerveModuleState drive);
     /**
      * Stop all motion on the swerve drive.
      */
@@ -23,7 +24,7 @@ public interface SwerveModule {
     /**
      * Return the current state of the swerve module
      */
-    SwerveState getState();
+    SwerveModuleState getState();
     /**
      * Get the location of the swerve module relative to the 
      * center of the robot
