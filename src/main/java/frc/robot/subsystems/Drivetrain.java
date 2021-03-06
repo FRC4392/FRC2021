@@ -58,6 +58,10 @@ public class Drivetrain extends SubsystemBase {
     mSwerveDrive.stop();
   }
 
+  public void followPath(double initTime){
+    mSwerveDrive.followPath(initTime);
+  }
+
   @Override
   public void periodic() {
     mSwerveDrive.updateOdometry();
