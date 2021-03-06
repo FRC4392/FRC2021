@@ -11,12 +11,10 @@ import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.function.DoubleConsumer;
 import java.util.function.DoubleSupplier;
 
 public class SwerveDrive {
@@ -44,6 +42,8 @@ public class SwerveDrive {
 
         mDriveController = new HolonomicDriveController(new PIDController(1,0,0), new PIDController(1,0,0), new ProfiledPIDController(1,0,0,new TrapezoidProfile.Constraints(6.28, 3.14)));
         mSwerveDriveOdometry = new SwerveDriveOdometry(mKinematics, Rotation2d.fromDegrees(mGyroAngle.getAsDouble()));
+
+        Arrays.stream(mModules).forEach(SwerveModule::init);
     }
 
 	public void stop() {
@@ -62,15 +62,27 @@ public class SwerveDrive {
         for (int i = 0; i < numModules; i++){
             mModules[i].set(states[i]);
         }
+
+    }
+
+    public Pose2d getPosition(){
+        return mSwerveDriveOdometry.getPoseMeters();
     }
 
     public Pose2d updateOdometry(){
-        SwerveModuleState[] states = (SwerveModuleState[]) Arrays.stream(mModules).map(SwerveModule::getState).toArray();
+        SwerveModuleState[] states = new SwerveModuleState[numModules];
+        for (int i = 0; i < numModules; i++) {
+            states[i] = mModules[i].getState();
+        }
         return mSwerveDriveOdometry.update(Rotation2d.fromDegrees(mGyroAngle.getAsDouble()), states);
     }
 
     public void log(){
-
+        Arrays.stream(mModules).forEach(SwerveModule::log);
+        Pose2d pose = getPosition();
+        SmartDashboard.putNumber("SwerveXLocation", pose.getX());
+        SmartDashboard.putNumber("SwerveYLocation", pose.getY());
+        SmartDashboard.putNumber("SwerveRotation", pose.getRotation().getDegrees());
     }
 
 

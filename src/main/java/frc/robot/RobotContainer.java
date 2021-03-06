@@ -15,11 +15,7 @@ import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.*;
-import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.Indexer;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Limelight;
-import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.*;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -34,6 +30,7 @@ public class RobotContainer {
   Intake mIntake = new Intake();
   Indexer mIndexer = new Indexer();
   Shooter mShooter = new Shooter();
+  Funnel mFunnel = new Funnel();
 
   XboxController mDriverController = new XboxController(0);
   XboxController mOperatorController = new XboxController(1);
@@ -55,7 +52,6 @@ public class RobotContainer {
     JoystickButton ManualShootButton = new JoystickButton(mOperatorController,XboxController.Button.kX.value);
     JoystickButton ManualShootButton2 = new JoystickButton(mOperatorController, XboxController.Button.kA.value);
     JoystickButton ManualShootButton3 = new JoystickButton(mOperatorController, XboxController.Button.kB.value);
-    JoystickButton OuttakeButton = new JoystickButton(mOperatorController, XboxController.Button.kBumperLeft.value);
     JoystickButton IntakePositionButton = new JoystickButton(mOperatorController, XboxController.Button.kBumperRight.value);
     Trigger IntakeButton = new Trigger( () -> mOperatorController.getTriggerAxis(GenericHID.Hand.kLeft) > 0.01 );
     Trigger ShootButton = new Trigger( () -> mOperatorController.getTriggerAxis(GenericHID.Hand.kRight) > 0.01 );
@@ -64,8 +60,7 @@ public class RobotContainer {
     ManualShootButton.whileHeld(new ManualShootCommand(mShooter));
     ManualShootButton2.whileHeld(new ManualShootCommand2(mShooter));
     ManualShootButton3.whileHeld( new ManualShootCommand3(mShooter));
-    IntakeButton.whileActiveContinuous(new IntakeCommand(mIntake, mIndexer));
-    OuttakeButton.whileHeld(new OuttakeCommand(mIntake, mIndexer));
+    IntakeButton.whileActiveContinuous(new IntakeCommand(mIntake, mFunnel, mIndexer));
     IntakePositionButton.whenPressed(mIntake::lift);
     IntakePositionButton.whenReleased(mIntake::lower);
     mIndexer.setDefaultCommand(new IndexerIndexCommand(mIndexer));

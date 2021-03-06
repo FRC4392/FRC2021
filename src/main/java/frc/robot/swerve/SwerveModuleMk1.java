@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.opencv.core.Mat;
 
 public class SwerveModuleMk1 implements SwerveModule {
 
@@ -25,6 +26,7 @@ public class SwerveModuleMk1 implements SwerveModule {
     private final Translation2d mLocation;
     private final String mName; 
     private boolean isInverted;
+    private double setpoint;
 
     //need to update the speed to m/s
 
@@ -38,6 +40,9 @@ public class SwerveModuleMk1 implements SwerveModule {
 
         mAzimuthEncoder = mAzimuthMotor.getEncoder();
         mDriveEncoder = mDriveMotor.getEncoder();
+        mDriveEncoder.setPositionConversionFactor(.004356);
+        mDriveEncoder.setVelocityConversionFactor((0.0241/42.0));
+        mDriveEncoder.setPosition(0);
         mDrivePID = mDriveMotor.getPIDController();
         mAzimuthPID = mAzimuthMotor.getPIDController();
     }
@@ -78,8 +83,9 @@ public class SwerveModuleMk1 implements SwerveModule {
         mAzimuthMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
         mAzimuthMotor.setSmartCurrentLimit(10);
 
+        mAzimuthPID.setP(0.05);
+
         mDriveMotor.setInverted(true);
-        mDriveEncoder.setVelocityConversionFactor(4.712);
 
         setAzimuthZero();
     }
@@ -89,22 +95,32 @@ public class SwerveModuleMk1 implements SwerveModule {
         SmartDashboard.putNumber(mName + " Absolute Position", mAzimuthCanCoder.getAbsolutePosition());
         SmartDashboard.putNumber(mName + " Incremental Position", mAzimuthEncoder.getPosition());
         SmartDashboard.putNumber(mName + " Velocity", mDriveEncoder.getVelocity());
+        SmartDashboard.putNumber(mName + "Drive Encoder Position", mDriveEncoder.getPosition());
+        SmartDashboard.putNumber(mName + " Rotation Setpoint", setpoint);
     }
 
     @Override
     public void set(SwerveModuleState drive) {
+
+        if (Math.abs(mAzimuthEncoder.getPosition() - mAzimuthCanCoder.getAbsolutePosition()) > 1){
+            //setAzimuthZero();
+        }
+
         double Angle = drive.angle.getDegrees();
+        SmartDashboard.putNumber(mName + " Given Setpoint", Angle);
         double Velocity = drive.speedMetersPerSecond;
 
         double azimuthPosition = mAzimuthEncoder.getPosition();
         double azimuthError = Math.IEEEremainder(Angle - azimuthPosition, 360);
+        SmartDashboard.putNumber(mName + " Azimuth Error", azimuthError);
 
         isInverted = Math.abs(azimuthError) > 90;
         if (isInverted) {
             azimuthError -= Math.copySign(180, azimuthError);
             Velocity = -Velocity;
         }
-        double setpoint = azimuthError + azimuthPosition;
+        setpoint = azimuthError + azimuthPosition;
+        SmartDashboard.putNumber(mName + " Azimuth CalcSetPoint", setpoint);
         mAzimuthPID.setReference(setpoint, ControlType.kPosition);
         mDriveMotor.set(Velocity);
     }

@@ -34,16 +34,16 @@ public class IndexShoot extends CommandBase {
   @Override
   public void execute() {
     if (mShooter.isAtSpeed()){
-      mIndexer.setSpeed(-1);
+      mIndexer.feed();
     } else {
-      mIndexer.setSpeed(0);
+      mIndexer.stop();
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    mIndexer.setSpeed(0);
+    mIndexer.stop();
   }
 
   // Returns true when the command should end.

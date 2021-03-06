@@ -7,22 +7,31 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Funnel extends SubsystemBase {
   /** Creates a new Funnel. */
 
-  CANSparkMax mFunnelMotor;
+  private final CANSparkMax mFunnelMotor;
+
+  private final static double funnelSpeed = 1;
   
   public Funnel() {
-   mFunnelMotor = new CANSparkMax(41, MotorType.kBrushless);
-
+    mFunnelMotor = new CANSparkMax(32, MotorType.kBrushless);
   }
 
   public void setSpeed(double speed){
     mFunnelMotor.set(speed);
   }
 
+  public void funnel(){
+    setSpeed(funnelSpeed);
+  }
+
+  public void stop(){
+    setSpeed(0);
+  }
 
   @Override
   public void periodic() {

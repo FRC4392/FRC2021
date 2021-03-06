@@ -34,18 +34,23 @@ public class Drivetrain extends SubsystemBase {
   private final PigeonIMU pidgey = new PigeonIMU(10);
 
   private final SwerveModuleMk1 Module1 = new SwerveModuleMk1(mAzimuth1, mDriveMotor1, mCanCoder1, new Translation2d(0.29, 0.29), "Module 1");
-  private final SwerveModuleMk1 Module2 = new SwerveModuleMk1(mAzimuth2, mDriveMotor2, mCanCoder2, new Translation2d(0.29, 0.29), "Module 2");
-  private final SwerveModuleMk1 Module3 = new SwerveModuleMk1(mAzimuth3, mDriveMotor3, mCanCoder3, new Translation2d(0.29, 0.29), "Module 3");
-  private final SwerveModuleMk1 Module4 = new SwerveModuleMk1(mAzimuth4, mDriveMotor4, mCanCoder4, new Translation2d(0.29, 0.29), "Module 4");
+  private final SwerveModuleMk1 Module2 = new SwerveModuleMk1(mAzimuth2, mDriveMotor2, mCanCoder2, new Translation2d(0.29, -0.29), "Module 2");
+  private final SwerveModuleMk1 Module3 = new SwerveModuleMk1(mAzimuth3, mDriveMotor3, mCanCoder3, new Translation2d(-0.29, 0.29), "Module 3");
+  private final SwerveModuleMk1 Module4 = new SwerveModuleMk1(mAzimuth4, mDriveMotor4, mCanCoder4, new Translation2d(-0.29, -0.29), "Module 4");
 
   private final SwerveDrive mSwerveDrive = new SwerveDrive(pidgey::getFusedHeading, Module1, Module2, Module3, Module4);
 
   /** Creates a new Drivetrain. */
   public Drivetrain() {
-
+    pidgey.setFusedHeading(0);
   }
 
   public void drive(double forward, double strafe, double azimuth, boolean fieldRelative){
+    if (!fieldRelative){
+      forward = -forward;
+      strafe = -strafe;
+    }
+    azimuth = azimuth*(1.0/0.29);
     mSwerveDrive.drive(forward, strafe, azimuth, fieldRelative);
   }
 
@@ -56,5 +61,6 @@ public class Drivetrain extends SubsystemBase {
   @Override
   public void periodic() {
     mSwerveDrive.updateOdometry();
+    mSwerveDrive.log();
   }
 }

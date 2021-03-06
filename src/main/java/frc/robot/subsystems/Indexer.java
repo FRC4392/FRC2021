@@ -9,11 +9,14 @@ import com.ctre.phoenix.CANifier.GeneralPin;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Indexer extends SubsystemBase {
-  CANSparkMax mIndexerMotor;
-  CANifier mCanifier;
+  private final CANSparkMax mIndexerMotor;
+  private final CANifier mCanifier;
+  private final static double indexSpeed = 0.35;
+  private final static double feedSpeed = .8;
 
   public Indexer() {
     mIndexerMotor = new CANSparkMax(41, MotorType.kBrushless);
@@ -24,23 +27,37 @@ public class Indexer extends SubsystemBase {
 
     mIndexerMotor.setInverted(true);
 
-    mIndexerMotor.setSmartCurrentLimit(15);
+    mIndexerMotor.setSmartCurrentLimit(30);
   }
 
   public void setSpeed(double speed) {
     mIndexerMotor.set(speed);
   }
 
-  public boolean getIntakeEye(){
-    return mCanifier.getGeneralInput(GeneralPin.SPI_CLK_PWM0P);
+  public void index(){
+    setSpeed(indexSpeed);
+  }
+
+  public void feed(){
+    setSpeed(feedSpeed);
+  }
+
+  public void stop(){
+    setSpeed(0);
   }
 
   public boolean getStartEye(){
-    return mCanifier.getGeneralInput(CANifier.GeneralPin.SPI_MISO_PWM2P);
+    return !mCanifier.getGeneralInput(GeneralPin.SPI_MISO_PWM2P);
   }
 
   public boolean getEndEye() {
-    return mCanifier.getGeneralInput(CANifier.GeneralPin.SPI_MOSI_PWM1P);
+    return !mCanifier.getGeneralInput(GeneralPin.SPI_MOSI_PWM1P);
+  }
+
+  public void log(){
+    SmartDashboard.putBoolean("endEyeState", getEndEye());
+    SmartDashboard.putBoolean("startEyeState", getStartEye());
+    SmartDashboard.putNumber("IndexerSpeed", mIndexerMotor.getAppliedOutput());
   }
 
   @Override

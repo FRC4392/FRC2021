@@ -8,38 +8,47 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.Funnel;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 
 public class IntakeCommand extends CommandBase {
   public final Intake mIntake;
-  public final Indexer mIndexer;
+  public final Funnel mFunnel;
+  public final  Indexer mIndexer;
 
-  public IntakeCommand(frc.robot.subsystems.Intake Intake, Indexer indexer) {
-    mIntake = Intake;
+  public IntakeCommand(Intake intake, Funnel funnel, Indexer indexer) {
+    mIntake = intake;
+    mFunnel = funnel;
     mIndexer = indexer;
-    addRequirements(mIntake);
+    addRequirements(mIntake, mFunnel);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    mIntake.lower();
+
+
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (!mIndexer.getEndEye() && !mIndexer.getIntakeEye()){
-      mIntake.setSpeed(0);
+    mIntake.intake();
+    if (!mIndexer.getStartEye()){
+      mFunnel.funnel();
     } else {
-      mIntake.setSpeed(1);
+      mFunnel.stop();
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    mIntake.setSpeed(0.0);
+    mIntake.stop();
+    mFunnel.stop();
   }
 
   // Returns true when the command should end.

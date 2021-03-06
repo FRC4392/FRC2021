@@ -28,7 +28,7 @@ public class ManualShootCommand2 extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    mShooter.setPIDVelocity(3600);
+    mShooter.setPIDVelocity(2000);
   }
 
   // Called once the command ends or is interrupted.
