@@ -20,7 +20,6 @@ public class SwerveModuleMk1 implements SwerveModule {
     private final CANCoder mAzimuthCanCoder;
     private final CANEncoder mAzimuthEncoder;
     private final CANEncoder mDriveEncoder;
-    @SuppressWarnings("unused")
     private final CANPIDController mDrivePID;
     private final CANPIDController mAzimuthPID;
     private final Translation2d mLocation;
@@ -44,6 +43,7 @@ public class SwerveModuleMk1 implements SwerveModule {
         mDriveEncoder.setVelocityConversionFactor((0.0241/42.0));
         mDriveEncoder.setPosition(0);
         mDrivePID = mDriveMotor.getPIDController();
+        mDrivePID.setFF(0.33);
         mAzimuthPID = mAzimuthMotor.getPIDController();
     }
 
@@ -123,6 +123,32 @@ public class SwerveModuleMk1 implements SwerveModule {
         SmartDashboard.putNumber(mName + " Azimuth CalcSetPoint", setpoint);
         mAzimuthPID.setReference(setpoint, ControlType.kPosition);
         mDriveMotor.set(Velocity);
+    }
+
+    @Override
+    public void setClosedLoop(SwerveModuleState drive){
+        if (Math.abs(mAzimuthEncoder.getPosition() - mAzimuthCanCoder.getAbsolutePosition()) > 1){
+            //setAzimuthZero();
+        }
+
+        double Angle = drive.angle.getDegrees();
+        SmartDashboard.putNumber(mName + " Given Setpoint", Angle);
+        double Velocity = drive.speedMetersPerSecond;
+
+        double azimuthPosition = mAzimuthEncoder.getPosition();
+        double azimuthError = Math.IEEEremainder(Angle - azimuthPosition, 360);
+        SmartDashboard.putNumber(mName + " Azimuth Error", azimuthError);
+
+        isInverted = Math.abs(azimuthError) > 90;
+        if (isInverted) {
+            azimuthError -= Math.copySign(180, azimuthError);
+            Velocity = -Velocity;
+        }
+        setpoint = azimuthError + azimuthPosition;
+        SmartDashboard.putNumber(mName + " Azimuth CalcSetPoint", setpoint);
+        mAzimuthPID.setReference(setpoint, ControlType.kPosition);
+        SmartDashboard.putNumber(mName + " Wheel Setpoint", Velocity);
+        mDrivePID.setReference(Velocity, ControlType.kVelocity);
     }
 
     @Override

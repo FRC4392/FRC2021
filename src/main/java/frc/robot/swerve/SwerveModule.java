@@ -17,6 +17,7 @@ public interface SwerveModule {
      * Set the state the swerve drive should attempt to be in
      */
     void set(SwerveModuleState drive);
+    void setClosedLoop(SwerveModuleState drive);
     /**
      * Stop all motion on the swerve drive.
      */

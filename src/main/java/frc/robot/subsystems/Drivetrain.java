@@ -42,7 +42,7 @@ public class Drivetrain extends SubsystemBase {
 
   /** Creates a new Drivetrain. */
   public Drivetrain() {
-    pidgey.setFusedHeading(0);
+    pidgey.setFusedHeading(0.0);
   }
 
   public void drive(double forward, double strafe, double azimuth, boolean fieldRelative){
@@ -52,6 +52,15 @@ public class Drivetrain extends SubsystemBase {
     }
     azimuth = azimuth*(1.0/0.29);
     mSwerveDrive.drive(forward, strafe, azimuth, fieldRelative);
+  }
+
+  public void driveClosedLoop(double forward, double strafe, double azimuth, boolean fieldRelative){
+    if (!fieldRelative){
+      forward = -forward;
+      strafe = -strafe;
+    }
+    azimuth = azimuth*(1.0/0.29);
+    mSwerveDrive.driveClosedLoop(forward, strafe, azimuth, fieldRelative);
   }
 
   public void stop(){
@@ -66,5 +75,9 @@ public class Drivetrain extends SubsystemBase {
   public void periodic() {
     mSwerveDrive.updateOdometry();
     mSwerveDrive.log();
+  }
+
+  public void resetGyro(){
+    pidgey.setFusedHeading(0.00);
   }
 }

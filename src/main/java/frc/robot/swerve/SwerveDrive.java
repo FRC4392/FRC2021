@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.trajectory.constraint.TrajectoryConstraint;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.DoubleSupplier;
 
 public class SwerveDrive {
@@ -49,17 +50,22 @@ public class SwerveDrive {
 
         mKinematics = new SwerveDriveKinematics(moduleLocations);
 
-        mDriveController = new HolonomicDriveController(new PIDController(0.1,0,0), new PIDController(0.1,0,0), new ProfiledPIDController(1,.1,.1,new TrapezoidProfile.Constraints(6.28, 3.14)));
+        mDriveController = new HolonomicDriveController(new PIDController(0,0,0), new PIDController(0,0,0), new ProfiledPIDController(2,.1,.1,new TrapezoidProfile.Constraints(6.28, 3.14)));
         mSwerveDriveOdometry = new SwerveDriveOdometry(mKinematics, Rotation2d.fromDegrees(mGyroAngle.getAsDouble()));
 
         Arrays.stream(mModules).forEach(SwerveModule::init);
 
-        TrajectoryConfig config = new TrajectoryConfig(.5, 1);
+        TrajectoryConfig config = new TrajectoryConfig(2.5, 1);
         config.setKinematics(mKinematics);
         //config.setReversed(true);
-        config.addConstraint(new SwerveDriveKinematicsConstraint(mKinematics, .5));
+        config.addConstraint(new SwerveDriveKinematicsConstraint(mKinematics, 3));
+        List<Translation2d> midpoints = new ArrayList<>();
+
+        midpoints.add(new Translation2d(2.0, 2.0));
+        midpoints.add(new Translation2d(4.0, -2.0));
+        midpoints.add(new Translation2d(6.0, 0.0));
         
-        trajectory = TrajectoryGenerator.generateTrajectory(new Pose2d(), new ArrayList<Translation2d>(), new Pose2d(2.0, 0.0, new Rotation2d()), config);
+        trajectory = TrajectoryGenerator.generateTrajectory(new Pose2d(), midpoints, new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(180)), config);
     }
 
 	public void stop() {
@@ -81,6 +87,20 @@ public class SwerveDrive {
 
     }
 
+    public void driveClosedLoop(double forward, double strafe, double azimuth, boolean fieldRelative){
+        ChassisSpeeds speeds;
+        if (fieldRelative){
+            speeds = ChassisSpeeds.fromFieldRelativeSpeeds(forward, strafe, azimuth, Rotation2d.fromDegrees(mGyroAngle.getAsDouble()));
+        } else {
+            speeds = new ChassisSpeeds(forward, strafe, azimuth);
+        }
+        SwerveModuleState[] states = mKinematics.toSwerveModuleStates(speeds);
+        //SwerveDriveKinematics.normalizeWheelSpeeds(states, 1);
+        for (int i = 0; i < numModules; i++){
+            mModules[i].setClosedLoop(states[i]);
+        }
+    }
+
     public Pose2d getPosition(){
         return mSwerveDriveOdometry.getPoseMeters();
     }
@@ -98,12 +118,14 @@ public class SwerveDrive {
 
         ChassisSpeeds speeds = mDriveController.calculate(getPosition(), goal, new Rotation2d());
 
-        drive(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, -speeds.omegaRadiansPerSecond, false);
+        driveClosedLoop(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, -speeds.omegaRadiansPerSecond, false);
         SmartDashboard.putNumber("goalx", goal.poseMeters.getX());
         SmartDashboard.putNumber("xerror", goal.poseMeters.getX() - getPosition().getX());
         SmartDashboard.putNumber("goaly", goal.poseMeters.getY());
         SmartDashboard.putNumber("yerror", goal.poseMeters.getY() - getPosition().getY());
         SmartDashboard.putNumber("goalrot", goal.poseMeters.getRotation().getDegrees());
+        SmartDashboard.putNumber("xVel", speeds.vxMetersPerSecond);
+        SmartDashboard.putNumber("yVel", speeds.vyMetersPerSecond);
     }
 
     public void log(){
