@@ -62,9 +62,9 @@ public class Shooter extends SubsystemBase {
 
 
     kP = mRobotPreferences.getDouble("ShooterKP", 0.005);
-    kI = mRobotPreferences.getDouble("ShooterKI", 0);
+    kI = mRobotPreferences.getDouble("ShooterKI", 0.00005);
     kD = mRobotPreferences.getDouble("ShooterKD", 0.0);
-    kIz = mRobotPreferences.getDouble("ShooterKIz", 0.0);
+    kIz = mRobotPreferences.getDouble("ShooterKIz", 0);
     kFF = mRobotPreferences.getDouble("ShooterKFF", 0.0);
     kMaxOutput = mRobotPreferences.getDouble("ShooterKMaxOutput", 1.0);
     kMinOutput = mRobotPreferences.getDouble("ShooterKMinOutput", 0);
@@ -101,7 +101,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public boolean isAtSpeed(){
-      return (Math.abs(setpoint - mEncoder.getVelocity()) < 20 && setpoint > 100);
+      return (Math.abs(setpoint - mEncoder.getVelocity()) < mRobotPreferences.getDouble("ShooterError", 100) && setpoint > 100);
     }
     
   @Override
