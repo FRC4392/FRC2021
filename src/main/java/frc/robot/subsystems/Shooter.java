@@ -60,22 +60,8 @@ public class Shooter extends SubsystemBase {
 
     mSolenoid = new Solenoid(0);
 
+    refreshPID();
 
-    kP = mRobotPreferences.getDouble("ShooterKP", 0.005);
-    kI = mRobotPreferences.getDouble("ShooterKI", 0.00005);
-    kD = mRobotPreferences.getDouble("ShooterKD", 0.0);
-    kIz = mRobotPreferences.getDouble("ShooterKIz", 0);
-    kFF = mRobotPreferences.getDouble("ShooterKFF", 0.0);
-    kMaxOutput = mRobotPreferences.getDouble("ShooterKMaxOutput", 1.0);
-    kMinOutput = mRobotPreferences.getDouble("ShooterKMinOutput", 0);
-    maxRPM = 5700.0;
-
-    mPidController.setP(kP);
-    mPidController.setI(kI);
-    mPidController.setD(kD);
-    mPidController.setIZone(kIz);
-    mPidController.setFF(kFF);
-    mPidController.setOutputRange(kMinOutput, kMaxOutput);
 
     mWheelMotor2.follow(mWheelMotor);
 
@@ -92,7 +78,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public void setPIDVelocity(double velocity) {
-      mPidController.setReference(velocity, ControlType.kVelocity);
+      mPidController.setReference(velocity, ControlType.kSmartVelocity);
       setpoint = velocity;
     }
 
@@ -102,6 +88,26 @@ public class Shooter extends SubsystemBase {
 
     public boolean isAtSpeed(){
       return (Math.abs(setpoint - mEncoder.getVelocity()) < mRobotPreferences.getDouble("ShooterError", 100) && setpoint > 100);
+    }
+
+    public void refreshPID(){
+      kP = mRobotPreferences.getDouble("ShooterKP", 0.005);
+      kI = mRobotPreferences.getDouble("ShooterKI", 0.00005);
+      kD = mRobotPreferences.getDouble("ShooterKD", 0.0);
+      kIz = mRobotPreferences.getDouble("ShooterKIz", 0);
+      kFF = mRobotPreferences.getDouble("ShooterKFF", 0.0);
+      kMaxOutput = mRobotPreferences.getDouble("ShooterKMaxOutput", 1.0);
+      kMinOutput = mRobotPreferences.getDouble("ShooterKMinOutput", 0);
+      maxRPM = 5700.0;
+
+      mPidController.setP(kP);
+      mPidController.setI(kI);
+      mPidController.setD(kD);
+      mPidController.setIZone(kIz);
+      mPidController.setFF(kFF);
+      mPidController.setOutputRange(kMinOutput, kMaxOutput);
+      mPidController.setSmartMotionMaxAccel(570, 0);
+      mPidController.setSmartMotionAccelStrategy(CANPIDController.AccelStrategy.kSCurve, 0);
     }
     
   @Override

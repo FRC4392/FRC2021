@@ -60,6 +60,7 @@ public class RobotContainer {
     JoystickButton IntakePositionButton2 = new JoystickButton(mDriverController, XboxController.Button.kBumperRight.value);
     IntakePositionButton2.whenPressed(mIntake::lift);
     IntakePositionButton2.whenReleased(mIntake::lower);
+    JoystickButton refreshButton = new JoystickButton(mOperatorController, XboxController.Button.kBumperLeft.value);
 
     Trigger IntakeButton2 = new Trigger( () -> mDriverController.getTriggerAxis(GenericHID.Hand.kLeft) > 0.01 );
     IntakeButton2.whileActiveContinuous(new IntakeCommand(mIntake, mFunnel, mIndexer));
@@ -80,6 +81,9 @@ public class RobotContainer {
     IntakePositionButton.whenReleased(mIntake::lower);
     mIndexer.setDefaultCommand(new IndexerIndexCommand(mIndexer));
     ShootButton.whileActiveContinuous(new IndexShoot(mIndexer, mShooter));
+
+    refreshButton.whenPressed(mShooter::refreshPID);
+
   }
 
   /**
