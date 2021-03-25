@@ -21,6 +21,7 @@ public class ManualShootCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+   mShooter.setHood(Shooter.HoodPosition.Open);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -33,6 +34,7 @@ public class ManualShootCommand extends CommandBase {
   @Override
   public void end(boolean interrupted){
    mShooter.setVelocity(0.0);
+   mShooter.setHood(Shooter.HoodPosition.Closed);
   }
 
   // Returns true when the command should end.
