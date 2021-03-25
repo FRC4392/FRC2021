@@ -57,19 +57,19 @@ public class RobotContainer {
     Trigger ShootButton = new Trigger( () -> mOperatorController.getTriggerAxis(GenericHID.Hand.kRight) > 0.01 );
 
     //Testing buttons
-    JoystickButton IntakePositionButton2 = new JoystickButton(mDriverController, XboxController.Button.kBumperRight.value);
-    IntakePositionButton2.whenPressed(mIntake::lift);
-    IntakePositionButton2.whenReleased(mIntake::lower);
+//    JoystickButton IntakePositionButton2 = new JoystickButton(mDriverController, XboxController.Button.kBumperRight.value);
+//    IntakePositionButton2.whenPressed(mIntake::lift);
+//    IntakePositionButton2.whenReleased(mIntake::lower);
     JoystickButton refreshButton = new JoystickButton(mOperatorController, XboxController.Button.kBumperLeft.value);
-
-    Trigger IntakeButton2 = new Trigger( () -> mDriverController.getTriggerAxis(GenericHID.Hand.kLeft) > 0.01 );
-    IntakeButton2.whileActiveContinuous(new IntakeCommand(mIntake, mFunnel, mIndexer));
-
-    JoystickButton DriverManualShootButton2 = new JoystickButton(mDriverController, XboxController.Button.kA.value);
-    DriverManualShootButton2.whileHeld(new ManualShootCommand2(mShooter));
-
-    Trigger DriverShootButton = new Trigger( () -> mDriverController.getTriggerAxis(GenericHID.Hand.kRight) > 0.01 );
-    DriverShootButton.whileActiveContinuous(new IndexShoot(mIndexer, mShooter));
+//
+//    Trigger IntakeButton2 = new Trigger( () -> mDriverController.getTriggerAxis(GenericHID.Hand.kLeft) > 0.01 );
+//    IntakeButton2.whileActiveContinuous(new IntakeCommand(mIntake, mFunnel, mIndexer));
+//
+//    JoystickButton DriverManualShootButton2 = new JoystickButton(mDriverController, XboxController.Button.kA.value);
+//    DriverManualShootButton2.whileHeld(new ManualShootCommand2(mShooter));
+//
+//    Trigger DriverShootButton = new Trigger( () -> mDriverController.getTriggerAxis(GenericHID.Hand.kRight) > 0.01 );
+//    DriverShootButton.whileActiveContinuous(new IndexShoot(mIndexer, mShooter));
     //End of testing buttons
 
     mDrivetrain.setDefaultCommand(new DriveCommand(mDrivetrain, mDriverController));

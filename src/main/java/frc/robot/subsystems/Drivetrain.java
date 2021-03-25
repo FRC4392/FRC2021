@@ -43,6 +43,7 @@ public class Drivetrain extends SubsystemBase {
   /** Creates a new Drivetrain. */
   public Drivetrain() {
     pidgey.setFusedHeading(0.0);
+    setLocation(3.892, 1.295, 0 );
   }
 
   public void drive(double forward, double strafe, double azimuth, boolean fieldRelative){
@@ -75,6 +76,11 @@ public class Drivetrain extends SubsystemBase {
   public void periodic() {
     mSwerveDrive.updateOdometry();
     mSwerveDrive.log();
+  }
+
+  public void setLocation(double x, double y, double angle){
+    mSwerveDrive.setLocation(x, y, angle);
+
   }
 
   public void resetGyro(){

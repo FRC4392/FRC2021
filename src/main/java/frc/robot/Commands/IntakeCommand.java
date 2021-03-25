@@ -27,7 +27,7 @@ public class IntakeCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    mIntake.lower();
+    //mIntake.lower();
 
 
 

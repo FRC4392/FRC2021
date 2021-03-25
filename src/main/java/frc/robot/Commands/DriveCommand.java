@@ -38,15 +38,29 @@ public class DriveCommand extends CommandBase {
     double xVel = 0;
     double yVel = 0;
     double rotVel = 0;
-    if (Math.abs(mController.getY(Hand.kLeft)) > preferences.getDouble("ControllerDeadband", 0.03)){
-      yVel = mController.getY(Hand.kLeft);
+
+      double SpeedMultiplier = preferences.getDouble("SpeedMultiplier", 0.75);
+      yVel = mController.getY(Hand.kLeft) * SpeedMultiplier;
+      xVel = mController.getX(Hand.kLeft) * SpeedMultiplier;
+
+     double deadband = preferences.getDouble("ControllerDeadband", 0.03);
+
+      if (Math.abs(yVel) > deadband){
+        yVel = (yVel-deadband)*(1/(1-deadband));
+      } else {
+        yVel = 0;
+      }
+
+    if (Math.abs(xVel) > deadband){
+      xVel = (xVel-deadband)*(1/(1-deadband));
+    } else {
+      xVel = 0;
     }
-    if (Math.abs(mController.getX(Hand.kLeft)) > preferences.getDouble("ControllerDeadband", 0.03)){
-      xVel = mController.getX(Hand.kLeft);
-    }
-    if (Math.abs(mController.getX(Hand.kRight)) > preferences.getDouble("ControllerDeadband", 0.03)){
-      rotVel = mController.getX(Hand.kRight);
-    }
+
+      double polar = Math.sqrt(yVel*yVel)+(xVel*xVel);
+      SmartDashboard.putNumber("Polar", polar);
+
+    rotVel = mController.getTriggerAxis(Hand.kRight) - mController.getTriggerAxis(Hand.kLeft);
 
     boolean fieldRelative = !mController.getBumper(Hand.kRight);
     mDrivetrain.drive(yVel, xVel, rotVel, fieldRelative);

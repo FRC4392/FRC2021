@@ -26,6 +26,7 @@ public class SimpleAutoCommand extends CommandBase {
   public void initialize() {
     inittime = Timer.getFPGATimestamp();
     mDrivetrain.resetGyro();
+    mDrivetrain.setLocation(.762, .762, 0 );
   }
 
   // Called every time the scheduler runs while the command is scheduled.

@@ -40,10 +40,12 @@ public class SwerveModuleMk1 implements SwerveModule {
         mAzimuthEncoder = mAzimuthMotor.getEncoder();
         mDriveEncoder = mDriveMotor.getEncoder();
         mDriveEncoder.setPositionConversionFactor(.004356);
-        mDriveEncoder.setVelocityConversionFactor((0.0241/42.0));
+        //mDriveEncoder.setVelocityConversionFactor((0.0241/42.0));
+        mDriveEncoder.setVelocityConversionFactor((0.0295/42.0));
         mDriveEncoder.setPosition(0);
         mDrivePID = mDriveMotor.getPIDController();
-        mDrivePID.setFF(0.33);
+        mDrivePID.setFF(0.31);
+        mDrivePID.setP(0.5);
         mAzimuthPID = mAzimuthMotor.getPIDController();
     }
 
@@ -86,6 +88,7 @@ public class SwerveModuleMk1 implements SwerveModule {
         mAzimuthPID.setP(0.05);
 
         mDriveMotor.setInverted(true);
+        mDriveMotor.setClosedLoopRampRate(0);
 
         setAzimuthZero();
     }
@@ -102,8 +105,8 @@ public class SwerveModuleMk1 implements SwerveModule {
     @Override
     public void set(SwerveModuleState drive) {
 
-        if (Math.abs(mAzimuthEncoder.getPosition() - mAzimuthCanCoder.getAbsolutePosition()) > 1){
-            //setAzimuthZero();
+        if (Math.abs(mAzimuthEncoder.getPosition() - mAzimuthCanCoder.getAbsolutePosition()) > 5){
+            setAzimuthZero();
         }
 
         double Angle = drive.angle.getDegrees();
