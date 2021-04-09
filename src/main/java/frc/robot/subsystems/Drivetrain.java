@@ -42,8 +42,10 @@ public class Drivetrain extends SubsystemBase {
 
   /** Creates a new Drivetrain. */
   public Drivetrain() {
-    pidgey.setFusedHeading(0.0);
-    setLocation(3.892, 1.295, 0 );
+    pidgey.setFusedHeading(0);
+    //setLocation(3.892, 1.295, 0 ); //Slalom
+    //setLocation(1.1661376518218622, 2.2212145748987857, 0 ); //Barrel Run
+    setStartPosition();
   }
 
   public void drive(double forward, double strafe, double azimuth, boolean fieldRelative){
@@ -84,6 +86,14 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void resetGyro(){
-    pidgey.setFusedHeading(0.00);
+    pidgey.setFusedHeading(0);
+  }
+
+  public double getRotation() {
+    return pidgey.getFusedHeading();
+  }
+
+  public void setStartPosition(){
+    mSwerveDrive.setStartPostion();
   }
 }

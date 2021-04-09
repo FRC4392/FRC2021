@@ -50,7 +50,7 @@ public class SwerveDrive {
 
         mKinematics = new SwerveDriveKinematics(moduleLocations);
 
-        mDriveController = new HolonomicDriveController(new PIDController(5,0,0), new PIDController(5,0,0), new ProfiledPIDController(2,.1,.1,new TrapezoidProfile.Constraints(6.28, 3.14)));
+        mDriveController = new HolonomicDriveController(new PIDController(4,0,0), new PIDController(4,0,0), new ProfiledPIDController(2,.1,.1,new TrapezoidProfile.Constraints(6.28, 3.14)));
         mSwerveDriveOdometry = new SwerveDriveOdometry(mKinematics, Rotation2d.fromDegrees(mGyroAngle.getAsDouble()));
 
         Arrays.stream(mModules).forEach(SwerveModule::init);
@@ -68,7 +68,7 @@ public class SwerveDrive {
         //trajectory = TrajectoryGenerator.generateTrajectory(new Pose2d(), midpoints, new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(180)), config);
 
         try {
-            trajectory = TrajectoryUtil.fromPathweaverJson(Filesystem.getDeployDirectory().toPath().resolve("output/Slalom.wpilib.json"));
+            trajectory = TrajectoryUtil.fromPathweaverJson(Filesystem.getDeployDirectory().toPath().resolve("output/Bounce.wpilib.json"));
         } catch (Exception e){
             DriverStation.reportError("Unable to open trajectory: " + "Slalom.wpilib.json", e.getStackTrace());
 
@@ -147,6 +147,10 @@ public class SwerveDrive {
     public void setLocation(double x, double y, double angle){
         Pose2d newPose = new Pose2d(x, y, Rotation2d.fromDegrees(angle));
         mSwerveDriveOdometry.resetPosition(newPose, Rotation2d.fromDegrees(angle));
+    }
+
+    public void setStartPostion(){
+        mSwerveDriveOdometry.resetPosition(trajectory.getInitialPose(), Rotation2d.fromDegrees(0));
     }
 
 

@@ -41,10 +41,10 @@ public class SwerveModuleMk1 implements SwerveModule {
         mDriveEncoder = mDriveMotor.getEncoder();
         mDriveEncoder.setPositionConversionFactor(.004356);
         //mDriveEncoder.setVelocityConversionFactor((0.0241/42.0));
-        mDriveEncoder.setVelocityConversionFactor((0.0295/42.0));
+        mDriveEncoder.setVelocityConversionFactor((0.029/42.0));
         mDriveEncoder.setPosition(0);
         mDrivePID = mDriveMotor.getPIDController();
-        mDrivePID.setFF(0.31);
+        mDrivePID.setFF(0.30);
         mDrivePID.setP(0.5);
         mAzimuthPID = mAzimuthMotor.getPIDController();
     }

@@ -37,7 +37,7 @@ public class IntakeCommand extends CommandBase {
   @Override
   public void execute() {
     mIntake.intake();
-    if (!mIndexer.getStartEye()){
+    if (!mIndexer.getStartEye() || true){
       mFunnel.funnel();
     } else {
       mFunnel.stop();

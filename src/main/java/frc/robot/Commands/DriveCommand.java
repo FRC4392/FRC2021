@@ -10,6 +10,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
@@ -19,11 +20,14 @@ public class DriveCommand extends CommandBase {
   public final Drivetrain mDrivetrain;
   public XboxController mController;
   private Preferences preferences = Preferences.getInstance();
+  private PIDController mPIDController;
+  private boolean lastScan;
   
   public DriveCommand(Drivetrain Drivetrain, XboxController XboxController) {
     mDrivetrain = Drivetrain;
     mController = XboxController;
-
+    mPIDController = new PIDController(0.01,0,0);
+    //mPIDController.setPID(1,0,0);
     addRequirements(mDrivetrain);
   }
 
@@ -40,10 +44,19 @@ public class DriveCommand extends CommandBase {
     double rotVel = 0;
 
       double SpeedMultiplier = preferences.getDouble("SpeedMultiplier", 0.75);
-      yVel = mController.getY(Hand.kLeft) * SpeedMultiplier;
-      xVel = mController.getX(Hand.kLeft) * SpeedMultiplier;
+
+
+
 
      double deadband = preferences.getDouble("ControllerDeadband", 0.03);
+
+    if (mController.getBumper(Hand.kLeft)){
+      SpeedMultiplier = .1;
+      deadband = 0;
+    }
+
+    yVel = mController.getY(Hand.kLeft) * SpeedMultiplier;
+    xVel = mController.getX(Hand.kLeft) * SpeedMultiplier;
 
       if (Math.abs(yVel) > deadband){
         yVel = (yVel-deadband)*(1/(1-deadband));
@@ -57,10 +70,25 @@ public class DriveCommand extends CommandBase {
       xVel = 0;
     }
 
+//    rotVel = -mPIDController.calculate(mDrivetrain.getRotation(), 90);
+
       double polar = Math.sqrt(yVel*yVel)+(xVel*xVel);
       SmartDashboard.putNumber("Polar", polar);
 
-    rotVel = mController.getTriggerAxis(Hand.kRight) - mController.getTriggerAxis(Hand.kLeft);
+    rotVel = mController.getX(Hand.kRight) * SpeedMultiplier;
+
+    if (Math.abs(rotVel) > deadband){
+      rotVel = (rotVel-deadband)*(1/(1-deadband));
+    } else {
+      rotVel = 0;
+    }
+
+
+
+    if (mController.getRawButton(7) &! lastScan){
+      mDrivetrain.resetGyro();
+    }
+    lastScan = mController.getRawButton(7);
 
     boolean fieldRelative = !mController.getBumper(Hand.kRight);
     mDrivetrain.drive(yVel, xVel, rotVel, fieldRelative);
