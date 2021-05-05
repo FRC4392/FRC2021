@@ -27,7 +27,7 @@ public class IntakeCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    mIntake.lower();
+    //mIntake.lower();
 
 
 
@@ -37,7 +37,7 @@ public class IntakeCommand extends CommandBase {
   @Override
   public void execute() {
     mIntake.intake();
-    if (!mIndexer.getStartEye()){
+    if (!mIndexer.getStartEye() || true){
       mFunnel.funnel();
     } else {
       mFunnel.stop();

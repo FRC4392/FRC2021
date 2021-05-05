@@ -2,6 +2,9 @@ package frc.robot.swerve;
 
 import com.ctre.phoenix.sensors.PigeonIMU;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.SlewRateLimiter;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.controller.HolonomicDriveController;
 import edu.wpi.first.wpilibj.controller.PIDController;
@@ -14,10 +17,7 @@ import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.trajectory.Trajectory;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
-import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.trajectory.*;
 import edu.wpi.first.wpilibj.trajectory.constraint.SwerveDriveKinematicsConstraint;
 import edu.wpi.first.wpilibj.trajectory.constraint.TrajectoryConstraint;
 
@@ -33,7 +33,7 @@ public class SwerveDrive {
     private final SwerveDriveOdometry mSwerveDriveOdometry;
     private final HolonomicDriveController mDriveController;
     private final DoubleSupplier mGyroAngle;
-    private final Trajectory trajectory;
+    private Trajectory trajectory = new Trajectory();
 
     //move gyro out of this class?
 
@@ -50,22 +50,30 @@ public class SwerveDrive {
 
         mKinematics = new SwerveDriveKinematics(moduleLocations);
 
-        mDriveController = new HolonomicDriveController(new PIDController(0,0,0), new PIDController(0,0,0), new ProfiledPIDController(2,.1,.1,new TrapezoidProfile.Constraints(6.28, 3.14)));
+        mDriveController = new HolonomicDriveController(new PIDController(4,0,0), new PIDController(4,0,0), new ProfiledPIDController(2,.1,.1,new TrapezoidProfile.Constraints(6.28, 3.14)));
         mSwerveDriveOdometry = new SwerveDriveOdometry(mKinematics, Rotation2d.fromDegrees(mGyroAngle.getAsDouble()));
 
         Arrays.stream(mModules).forEach(SwerveModule::init);
 
-        TrajectoryConfig config = new TrajectoryConfig(2.5, 1);
-        config.setKinematics(mKinematics);
-        //config.setReversed(true);
-        config.addConstraint(new SwerveDriveKinematicsConstraint(mKinematics, 3));
-        List<Translation2d> midpoints = new ArrayList<>();
-
-        midpoints.add(new Translation2d(2.0, 2.0));
-        midpoints.add(new Translation2d(4.0, -2.0));
-        midpoints.add(new Translation2d(6.0, 0.0));
+//        TrajectoryConfig config = new TrajectoryConfig(2.5, 1);
+//        config.setKinematics(mKinematics);
+//        //config.setReversed(true);
+//        config.addConstraint(new SwerveDriveKinematicsConstraint(mKinematics, 3));
+//        List<Translation2d> midpoints = new ArrayList<>();
+//
+//        midpoints.add(new Translation2d(2.0, 2.0));
+//        midpoints.add(new Translation2d(4.0, -2.0));
+//        midpoints.add(new Translation2d(6.0, 0.0));
         
-        trajectory = TrajectoryGenerator.generateTrajectory(new Pose2d(), midpoints, new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(180)), config);
+        //trajectory = TrajectoryGenerator.generateTrajectory(new Pose2d(), midpoints, new Pose2d(0.0, 0.0, Rotation2d.fromDegrees(180)), config);
+
+        try {
+            trajectory = TrajectoryUtil.fromPathweaverJson(Filesystem.getDeployDirectory().toPath().resolve("output/Bounce.wpilib.json"));
+        } catch (Exception e){
+            DriverStation.reportError("Unable to open trajectory: " + "Slalom.wpilib.json", e.getStackTrace());
+
+        }
+
     }
 
 	public void stop() {
@@ -134,6 +142,15 @@ public class SwerveDrive {
         SmartDashboard.putNumber("SwerveXLocation", pose.getX());
         SmartDashboard.putNumber("SwerveYLocation", pose.getY());
         SmartDashboard.putNumber("SwerveRotation", pose.getRotation().getDegrees());
+    }
+
+    public void setLocation(double x, double y, double angle){
+        Pose2d newPose = new Pose2d(x, y, Rotation2d.fromDegrees(angle));
+        mSwerveDriveOdometry.resetPosition(newPose, Rotation2d.fromDegrees(angle));
+    }
+
+    public void setStartPostion(){
+        mSwerveDriveOdometry.resetPosition(trajectory.getInitialPose(), Rotation2d.fromDegrees(0));
     }
 
 

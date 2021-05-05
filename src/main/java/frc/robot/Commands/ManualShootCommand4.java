@@ -12,11 +12,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Shooter.HoodPosition;
 
-public class ManualShootCommand2 extends CommandBase {
+public class ManualShootCommand4 extends CommandBase {
  public final Shooter mShooter;
- private Preferences preferences = Preferences.getInstance();
+ Preferences preferences = Preferences.getInstance();
 
-  public ManualShootCommand2(Shooter Shooter) {
+  public ManualShootCommand4(Shooter Shooter) {
     mShooter = Shooter;
     addRequirements(mShooter);
   }
@@ -30,7 +30,7 @@ public class ManualShootCommand2 extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    mShooter.setPIDVelocity(preferences.getDouble("shoot2", 3200));
+    mShooter.setPIDVelocity(preferences.getDouble("shoot4", 3200));
   }
 
   // Called once the command ends or is interrupted.

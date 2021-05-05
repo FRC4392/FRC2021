@@ -7,12 +7,14 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Shooter.HoodPosition;
 
 public class ManualShootCommand3 extends CommandBase {
  public final Shooter mShooter;
+ private Preferences preferences = Preferences.getInstance();
 
   public ManualShootCommand3(Shooter Shooter) {
     mShooter = Shooter;
@@ -22,13 +24,13 @@ public class ManualShootCommand3 extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    mShooter.setHood(HoodPosition.Open);
+    mShooter.setHood(HoodPosition.Closed);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    mShooter.setPIDVelocity(3600.00);
+    mShooter.setPIDVelocity(preferences.getDouble("shoot3", 3200));
   }
 
   // Called once the command ends or is interrupted.
