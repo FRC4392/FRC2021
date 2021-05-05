@@ -66,7 +66,7 @@ public class Shooter extends SubsystemBase {
     mWheelMotor2.follow(mWheelMotor);
 
     mWheelMotor.setOpenLoopRampRate(0.0);
-    mWheelMotor.setClosedLoopRampRate(0.0);
+    mWheelMotor.setClosedLoopRampRate(0.1);
 
     mWheelMotor.burnFlash();
     mWheelMotor2.burnFlash();
@@ -78,7 +78,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public void setPIDVelocity(double velocity) {
-      mPidController.setReference(velocity, ControlType.kSmartVelocity);
+      mPidController.setReference(velocity, ControlType.kVelocity);
       setpoint = velocity;
     }
 
@@ -106,7 +106,8 @@ public class Shooter extends SubsystemBase {
       mPidController.setIZone(kIz);
       mPidController.setFF(kFF);
       mPidController.setOutputRange(kMinOutput, kMaxOutput);
-      mPidController.setSmartMotionMaxAccel(570, 0);
+      mPidController.setSmartMotionMaxVelocity(5700, 0);
+      mPidController.setSmartMotionMaxAccel(5700, 0);
       mPidController.setSmartMotionAccelStrategy(CANPIDController.AccelStrategy.kSCurve, 0);
     }
     

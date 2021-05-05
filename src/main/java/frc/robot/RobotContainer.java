@@ -57,7 +57,7 @@ public class RobotContainer {
     Trigger ShootButton = new Trigger( () -> mOperatorController.getTriggerAxis(GenericHID.Hand.kRight) > 0.01 );
 
     //Testing buttons
-    JoystickButton IntakePositionButton2 = new JoystickButton(mDriverController, XboxController.Button.kBumperRight.value);
+    JoystickButton IntakePositionButton2 = new JoystickButton(mDriverController, XboxController.Button.kBumperLeft.value);
     IntakePositionButton2.whenPressed(mIntake::lift);
     IntakePositionButton2.whenReleased(mIntake::lower);
     JoystickButton refreshButton = new JoystickButton(mOperatorController, XboxController.Button.kBumperLeft.value);

@@ -22,7 +22,7 @@ public class ManualShootCommand2 extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    mShooter.setHood(HoodPosition.Open);
+    mShooter.setHood(HoodPosition.Closed);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
